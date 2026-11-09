@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="te">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101014">
+  <meta name="description" content="మీ నెక్స్ట్ ఫేవరెట్ సినిమాను కనుక్కోండి — కొత్త సినిమాలు, ట్రెండింగ్ కథలు, మీ వాచ్‌లిస్ట్ అన్నీ ఒకేచోట.">
+  <title>చిత్ర — మీ సినిమా ప్రపంచం</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101014;
+      --surface: #19191f;
+      --muted: #9c9ba8;
+      --text: #f7f5fa;
+      --accent: #ff5b50;
+      --accent-light: #ff8278;
+      --line: rgba(255,255,255,.09);
+      font-family: Inter, "Noto Sans Telugu", "Nirmala UI", "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); min-width: 320px; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; text-decoration: none; }
+    .shell { max-width: 1440px; margin: auto; padding: 0 6.1%; }
+
+    .topbar {
+      height: 82px; display: flex; align-items: center; gap: 48px;
+      border-bottom: 1px solid var(--line); position: relative; z-index: 3;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 23px; font-weight: 850; letter-spacing: -.8px; white-space: nowrap; }
+    .brand-mark { width: 33px; height: 33px; display: grid; place-items: center; border-radius: 11px; background: var(--accent); color: white; font-size: 17px; }
+    .nav { display: flex; gap: 30px; color: #b7b5c0; font-size: 14px; }
+    .nav a:hover, .nav a.active { color: white; }
+    .nav a.active { position: relative; }
+    .nav a.active::after { content: ""; height: 2px; position: absolute; bottom: -31px; left: 0; right: 0; background: var(--accent); }
+    .top-actions { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+    .search { display: flex; align-items: center; gap: 9px; width: 210px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); background: rgba(255,255,255,.035); }
+    .search input { width: 100%; color: var(--text); border: 0; outline: 0; background: transparent; font-size: 13px; }
+    .search input::placeholder { color: #92909d; }
+    .profile { display: grid; place-items: center; width: 37px; height: 37px; border-radius: 50%; background: #393944; font-size: 13px; font-weight: 700; }
+
+    .hero {
+      min-height: 480px; position: relative; display: flex; align-items: center; overflow: hidden;
+      margin: 27px 0 45px; border-radius: 20px;
+      background: #25232a url("https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=2000&q=85") center 48% / cover no-repeat;
+    }
+    .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(13,13,17,.96) 0%, rgba(13,13,17,.78) 44%, rgba(13,13,17,.12) 100%), linear-gradient(0deg, rgba(13,13,17,.45), transparent 55%); }
+    .hero-copy { position: relative; z-index: 1; width: min(570px, 70%); padding: 58px 6%; }
+    .eyebrow { color: var(--accent-light); font-size: 12px; letter-spacing: 1.8px; font-weight: 800; text-transform: uppercase; }
+    .hero h1 { margin: 15px 0 12px; font-size: clamp(36px, 5vw, 61px); line-height: 1.13; letter-spacing: -1.7px; }
+    .hero-meta { color: #d3d0d9; font-size: 13px; }
+    .hero-meta span { margin-right: 14px; }
+    .hero-meta .rating { color: #ffd166; }
+    .hero p { color: #c6c4ce; line-height: 1.8; max-width: 480px; font-size: 14px; margin: 17px 0 25px; }
+    .hero-buttons { display: flex; gap: 11px; }
+    .btn { cursor: pointer; border: 0; border-radius: 9px; padding: 12px 18px; font-weight: 700; font-size: 13px; transition: transform .18s, background .18s; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: #ff7167; }
+    .btn-quiet { background: rgba(255,255,255,.13); border: 1px solid rgba(255,255,255,.12); }
+
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+    .section-heading h2 { font-size: 22px; letter-spacing: -.45px; margin: 0 0 5px; }
+    .section-heading p { color: var(--muted); margin: 0; font-size: 13px; }
+    .text-link { color: var(--accent-light); font-size: 13px; font-weight: 700; cursor: pointer; background: none; border: 0; }
+    .filters { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 21px; }
+    .filter { border: 1px solid var(--line); background: transparent; color: #b9b7c1; padding: 8px 14px; border-radius: 30px; font-size: 12px; cursor: pointer; }
+    .filter:hover, .filter.selected { color: white; border-color: var(--accent); background: rgba(255,91,80,.12); }
+    .grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 23px 17px; }
+    .card { min-width: 0; cursor: pointer; }
+    .poster-wrap { aspect-ratio: 2 / 2.85; position: relative; overflow: hidden; border-radius: 12px; background: #282830; }
+    .poster { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s; }
+    .card:hover .poster { transform: scale(1.055); }
+    .poster-wrap::after { content: ""; position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, rgba(0,0,0,.62)); pointer-events: none; }
+    .rating-badge { position: absolute; z-index: 1; top: 10px; left: 10px; padding: 5px 8px; border-radius: 6px; background: rgba(16,16,20,.82); font-size: 11px; color: #ffd166; }
+    .save-btn { position: absolute; z-index: 2; top: 8px; right: 8px; border: 0; border-radius: 50%; background: rgba(16,16,20,.78); width: 32px; height: 32px; cursor: pointer; font-size: 17px; }
+    .save-btn.saved { color: var(--accent-light); }
+    .poster-caption { position: absolute; z-index: 1; bottom: 11px; left: 12px; right: 12px; font-size: 11px; color: #f3f0f5; }
+    .movie-title { margin: 11px 0 5px; font-size: 14px; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .movie-sub { color: var(--muted); font-size: 12px; display: flex; justify-content: space-between; gap: 7px; }
+    .empty { color: var(--muted); text-align: center; padding: 50px 16px; grid-column: 1 / -1; border: 1px dashed var(--line); border-radius: 12px; }
+    .collection { padding: 60px 0 73px; }
+    .footer { border-top: 1px solid var(--line); padding: 24px 0 32px; color: #8e8d98; font-size: 12px; display: flex; justify-content: space-between; gap: 16px; }
+
+    dialog { width: min(580px, calc(100% - 32px)); padding: 0; color: var(--text); border: 1px solid var(--line); border-radius: 16px; background: #1c1b22; box-shadow: 0 24px 80px #000b; }
+    dialog::backdrop { background: rgba(0,0,0,.76); backdrop-filter: blur(5px); }
+    .dialog-cover { height: 210px; background-size: cover; background-position: center; position: relative; }
+    .dialog-cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #1c1b22, transparent 80%); }
+    .dialog-content { padding: 0 25px 24px; position: relative; margin-top: -35px; z-index: 1; }
+    .dialog-content h2 { margin: 0 0 8px; }
+    .dialog-content p { color: #c0bec9; font-size: 14px; line-height: 1.8; }
+    .dialog-close { float: right; position: relative; z-index: 2; margin: 12px; background: #16161ac9; border: 0; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 19px; }
+
+    @media (max-width: 1000px) { .shell { padding: 0 4%; } .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } .topbar { gap: 28px; } }
+    @media (max-width: 720px) {
+      .shell { padding: 0 20px; }
+      .topbar { height: 68px; gap: 15px; }
+      .brand { font-size: 20px; }
+      .nav { display: none; }
+      .search { width: min(45vw, 210px); }
+      .top-actions { gap: 10px; }
+      .hero { min-height: 410px; margin: 20px 0 36px; border-radius: 15px; background-position: 58% center; }
+      .hero::before { background: linear-gradient(90deg, rgba(13,13,17,.92), rgba(13,13,17,.48)), linear-gradient(0deg, rgba(13,13,17,.6), transparent); }
+      .hero-copy { width: 100%; padding: 40px 25px; }
+      .hero h1 { font-size: 43px; }
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 19px 12px; }
+      .collection { padding: 45px 0 54px; }
+    }
+    @media (max-width: 470px) {
+      .shell { padding: 0 15px; }
+      .search { width: 38px; padding: 10px; justify-content: center; }
+      .search input { width: 0; }
+      .search:focus-within { width: 145px; }
+      .search:focus-within input { width: 100%; }
+      .profile { width: 34px; height: 34px; }
+      .hero { min-height: 400px; }
+      .hero h1 { font-size: 37px; }
+      .hero-copy { padding: 34px 20px; }
+      .hero p { font-size: 13px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 13px; }
+      .section-heading h2 { font-size: 19px; }
+      .footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar shell">
+    <a class="brand" href="#" aria-label="చిత్ర హోమ్"><span class="brand-mark">చి</span>చిత్ర</a>
+    <nav class="nav" aria-label="ప్రధాన నావిగేషన్">
+      <a class="active" href="#home">హోమ్</a>
+      <a href="#movies">సినిమాలు</a>
+      <a href="#watchlist" id="watchlist-nav">నా వాచ్‌లిస్ట్</a>
+    </nav>
+    <div class="top-actions">
+      <label class="search" aria-label="సినిమా వెతకండి">
+        <span aria-hidden="true">⌕</span>
+        <input id="search" type="search" placeholder="సినిమా వెతకండి..." autocomplete="off">
+      </label>
+      <div class="profile" aria-label="ప్రొఫైల్">చి</div>
+    </div>
+  </header>
+
+  <main class="shell" id="home">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow">ఈ వారం స్పాట్‌లైట్</div>
+        <h1 id="hero-title">ఇంటర్‌స్టెల్లార్</h1>
+        <div class="hero-meta"><span>2014</span><span>సైన్స్ ఫిక్షన్</span><span>2గం 49ని</span><span class="rating">★ 8.7</span></div>
+        <p>మరిచిపోలేని కథలు, అద్భుతమైన సినిమాటోగ్రఫీ, మనసును తాకే సంగీతం — ఈ వారం మీరు మిస్ కాకూడని సినిమా.</p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary" id="hero-details">▶ &nbsp; వివరాలు చూడండి</button>
+          <button class="btn btn-quiet" id="hero-save">＋ &nbsp; వాచ్‌లిస్ట్</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="movies" aria-labelledby="movies-heading">
+      <div class="section-heading">
+        <div><h2 id="movies-heading">మీ కోసం ఎంపిక చేసినవి</h2><p>ఈరోజు ప్రేక్షకులు ఎక్కువగా చూస్తున్న సినిమాలు</p></div>
+        <button class="text-link" id="clear-filters">అన్నీ చూడండి →</button>
+      </div>
+      <div class="filters" id="filters" aria-label="జానర్ ఫిల్టర్‌లు"></div>
+      <div class="grid" id="movie-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="collection" id="watchlist">
+      <div class="section-heading">
+        <div><h2>మీ వాచ్‌లిస్ట్</h2><p>తర్వాత చూడటానికి దాచుకున్న సినిమాలు</p></div>
+      </div>
+      <div class="grid" id="watchlist-grid"></div>
+    </section>
+  </main>
+  <footer class="footer shell"><span>© 2025 చిత్రం · సినిమా ప్రేమికుల కోసం</span><span>కథలు కలుపుతాయి.</span></footer>
+
+  <dialog id="movie-dialog" aria-labelledby="dialog-title">
+    <button class="dialog-close" aria-label="మూసివేయండి">×</button>
+    <div class="dialog-cover"></div>
+    <div class="dialog-content">
+      <div class="eyebrow">సినిమా వివరాలు</div>
+      <h2 id="dialog-title"></h2>
+      <div class="hero-meta" id="dialog-meta"></div>
+      <p id="dialog-description"></p>
+      <button class="btn btn-primary" id="dialog-save">＋ &nbsp; వాచ్‌లిస్ట్‌లో చేర్చండి</button>
+    </div>
+  </dialog>
+
+  <script>
+    const movies = [
+      { id: 1, title: "ది గ్రాండ్ బుడాపెస్ట్", year: 2014, genre: "కామెడీ", rating: "8.1", language: "ఇంగ్లీష్", duration: "1గం 39ని", image: "photo-1478720568477-152d9b164e26", description: "ఒక ప్రసిద్ధ హోటల్ ద్వారపాలకుడు, అతని యువ సహాయకుడి చుట్టూ తిరిగే హాస్యం, స్నేహం, సాహసంతో నిండిన అందమైన కథ." },
+      { id: 2, title: "ఇన్‌టు ద వైల్డ్", year: 2007, genre: "డ్రామా", rating: "8.0", language: "ఇంగ్లీష్", duration: "2గం 28ని", image: "photo-1472396961693-142e6e269027", description: "తనను తాను కనుగొనే ప్రయాణంలో ప్రకృతి మధ్యకు వెళ్లిన ఒక యువకుడి హృదయాన్ని హత్తుకునే నిజ జీవిత కథ." },
+      { id: 3, title: "మిడ్‌నైట్ ఇన్ ప్యారిస్", year: 2011, genre: "రొమాన్స్", rating: "7.7", language: "ఇంగ్లీష్", duration: "1గం 34ని", image: "photo-1499856871958-5b9627545d1a", description: "ప్యారిస్‌లో ప్రతి రాత్రీ గతంలోని అద్భుతమైన ప్రపంచంలోకి తీసుకెళ్లే ఒక రచయిత మాయా ప్రయాణం." },
+      { id: 4, title: "ఇంటర్‌స్టెల్లార్", year: 2014, genre: "సైన్స్ ఫిక్షన్", rating: "8.7", language: "ఇంగ్లీష్", duration: "2గం 49ని", image: "photo-1446776811953-b23d57bd21aa", description: "మానవాళి భవిష్యత్తు కోసం ఒక తండ్రి అంతరిక్షంలో చేసే అపారమైన ప్రయాణం — ప్రేమ, కాలం, ఆశల గురించి గొప్ప కథ." },
+      { id: 5, title: "ది సీక్రెట్ లైఫ్ ఆఫ్ వాల్టర్", year: 2013, genre: "అడ్వెంచర్", rating: "7.3", language: "ఇంగ్లీష్", duration: "1గం 54ని", image: "photo-1464822759023-fed622ff2c3b", description: "ఊహల్లోనే సాహసాలు చేసే ఒక సాధారణ వ్యక్తి, తన జీవితంలోనే అతిపెద్ద ప్రయాణాన్ని మొదలుపెడతాడు." },
+      { id: 6, title: "లా లా ల్యాండ్", year: 2016, genre: "మ్యూజికల్", rating: "8.0", language: "ఇంగ్లీష్", duration: "2గం 8ని", image: "photo-1519608487953-e999c86e7455", description: "లాస్ ఏంజెలెస్‌లో కలలు కనే ఇద్దరు కళాకారుల ప్రేమ, ఆశయం, సంగీతంతో నిండిన రంగుల ప్రయాణం." },
+      { id: 7, title: "ది షావ్‌షాంక్ రిడెంప్షన్", year: 1994, genre: "డ్రామా", rating: "9.3", language: "ఇంగ్లీష్", duration: "2గం 22ని", image: "photo-1511497584788-876760111969", description: "స్నేహం, ఓర్పు, ఆశ కలిస్తే ఎలాంటి గోడనైనా దాటవచ్చని చెప్పే చిరస్మరణీయ కథ." },
+      { id: 8, title: "అమీలీ", year: 2001, genre: "రొమాన్స్", rating: "8.3", language: "ఫ్రెంచ్", duration: "2గం 2ని", image: "photo-1490730141103-6cac27aaab94", description: "ప్యారిస్‌లోని చిన్న చిన్న ఆనందాలను ఇతరుల జీవితాల్లో పంచే ఓ యువతి మధురమైన కథ." },
+      { id: 9, title: "ది మార్షియన్", year: 2015, genre: "సైన్స్ ఫిక్షన్", rating: "8.0", language: "ఇంగ్లీష్", duration: "2గం 24ని", image: "photo-1446776811953-b23d57bd21aa", description: "అంగారక గ్రహంపై ఒంటరిగా చిక్కుకున్న వ్యోమగామి, తెలివి మరియు పట్టుదలతో బతికి బయటపడే సాహసం." },
+      { id: 10, title: "లైఫ్ ఆఫ్ పై", year: 2012, genre: "అడ్వెంచర్", rating: "7.9", language: "ఇంగ్లీష్", duration: "2గం 7ని", image: "photo-1500375592092-40eb2168fd21", description: "సముద్రంలో ఒక పులితో కలిసి బతుకు పోరాటం చేసే యువకుడి దృశ్య కావ్యం." }
+    ];
+    const genres = ["అన్నీ", ...new Set(movies.map(movie => movie.genre))];
+    const imageUrl = (image, width = 600) => `https://images.unsplash.com/${image}?auto=format&fit=crop&w=${width}&q=80`;
+    const grid = document.querySelector("#movie-grid");
+    const watchGrid = document.querySelector("#watchlist-grid");
+    const dialog = document.querySelector("#movie-dialog");
+    let activeGenre = "అన్నీ";
+    let query = "";
+    let watchlist = JSON.parse(localStorage.getItem("chitra-watchlist") || "[]");
+    let dialogMovie = null;
+
+    function renderFilters() {
+      document.querySelector("#filters").innerHTML = genres.map(genre =>
+        `<button class="filter${genre === activeGenre ? " selected" : ""}" data-genre="${genre}">${genre}</button>`
+      ).join("");
+    }
+
+    function card(movie) {
+      const saved = watchlist.includes(movie.id);
+      return `<article class="card" data-id="${movie.id}" tabindex="0" aria-label="${movie.title}, వివరాలు చూడండి">
+        <div class="poster-wrap">
+          <img class="poster" src="${imageUrl(movie.image)}" alt="${movie.title} సినిమా పోస్టర్" loading="lazy">
+          <span class="rating-badge">★ ${movie.rating}</span>
+          <button class="save-btn${saved ? " saved" : ""}" data-save="${movie.id}" aria-label="${saved ? "వాచ్‌లిస్ట్ నుంచి తొలగించండి" : "వాచ్‌లిస్ట్‌లో చేర్చండి"}" title="వాచ్‌లిస్ట్">${saved ? "♥" : "＋"}</button>
+          <span class="poster-caption">${movie.language} &nbsp;·&nbsp; ${movie.duration}</span>
+        </div>
+        <h3 class="movie-title">${movie.title}</h3>
+        <div class="movie-sub"><span>${movie.genre}</span><span>${movie.year}</span></div>
+      </article>`;
+    }
+
+    function renderMovies() {
+      const filtered = movies.filter(movie =>
+        (activeGenre === "అన్నీ" || movie.genre === activeGenre) &&
+        `${movie.title} ${movie.genre} ${movie.year}`.toLowerCase().includes(query.toLowerCase())
+      );
+      grid.innerHTML = filtered.length ? filtered.map(card).join("") : `<div class="empty">సినిమాలు కనిపించలేదు. వేరే పేరుతో వెతకండి.</div>`;
+      const savedMovies = movies.filter(movie => watchlist.includes(movie.id));
+      watchGrid.innerHTML = savedMovies.length ? savedMovies.map(card).join("") : `<div class="empty">ఇంకా సినిమాలు దాచుకోలేదు. మీకు నచ్చిన సినిమాపై ＋ నొక్కండి.</div>`;
+      const heroSaved = watchlist.includes(4);
+      document.querySelector("#hero-save").innerHTML = heroSaved ? "♥ &nbsp; వాచ్‌లిస్ట్‌లో ఉంది" : "＋ &nbsp; వాచ్‌లిస్ట్";
+      bindCards();
+    }
+
+    function toggleSaved(id) {
+      watchlist = watchlist.includes(id) ? watchlist.filter(item => item !== id) : [...watchlist, id];
+      localStorage.setItem("chitra-watchlist", JSON.stringify(watchlist));
+      renderMovies();
+      if (dialogMovie) updateDialogSave();
+    }
+
+    function openMovie(movie) {
+      dialogMovie = movie;
+      document.querySelector(".dialog-cover").style.backgroundImage = `url("${imageUrl(movie.image, 1000)}")`;
+      document.querySelector("#dialog-title").textContent = movie.title;
+      document.querySelector("#dialog-meta").textContent = `${movie.year}  ·  ${movie.genre}  ·  ★ ${movie.rating}  ·  ${movie.duration}`;
+      document.querySelector("#dialog-description").textContent = movie.description;
+      updateDialogSave();
+      dialog.showModal();
+    }
+
+    function updateDialogSave() {
+      const saved = watchlist.includes(dialogMovie.id);
+      document.querySelector("#dialog-save").textContent = saved ? "♥  వాచ్‌లిస్ట్ నుంచి తొలగించండి" : "＋  వాచ్‌లిస్ట్‌లో చేర్చండి";
+    }
+
+    function bindCards() {
+      document.querySelectorAll(".card").forEach(element => {
+        const movie = movies.find(item => item.id === Number(element.dataset.id));
+        element.addEventListener("click", event => {
+          if (event.target.closest("[data-save]")) return;
+          openMovie(movie);
+        });
+        element.addEventListener("keydown", event => {
+          if ((event.key === "Enter" || event.key === " ") && event.target === element) {
+            event.preventDefault();
+            openMovie(movie);
+          }
+        });
+      });
+      document.querySelectorAll("[data-save]").forEach(button => button.addEventListener("click", event => {
+        event.stopPropagation();
+        toggleSaved(Number(button.dataset.save));
+      }));
+    }
+
+    document.querySelector("#filters").addEventListener("click", event => {
+      const button = event.target.closest("[data-genre]");
+      if (!button) return;
+      activeGenre = button.dataset.genre;
+      renderFilters();
+      renderMovies();
+    });
+    document.querySelector("#search").addEventListener("input", event => {
+      query = event.target.value.trim();
+      renderMovies();
+    });
+    document.querySelector("#clear-filters").addEventListener("click", () => {
+      activeGenre = "అన్నీ";
+      query = "";
+      document.querySelector("#search").value = "";
+      renderFilters();
+      renderMovies();
+    });
+    document.querySelector("#watchlist-nav").addEventListener("click", event => {
+      event.preventDefault();
+      document.querySelector("#watchlist").scrollIntoView({ behavior: "smooth" });
+    });
+    document.querySelector("#hero-details").addEventListener("click", () => openMovie(movies[3]));
+    document.querySelector("#hero-save").addEventListener("click", () => toggleSaved(4));
+    document.querySelector("#dialog-save").addEventListener("click", () => {
+      if (movies.some(movie => movie.id === dialogMovie.id)) toggleSaved(dialogMovie.id);
+    });
+    document.querySelector(".dialog-close").addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
+
+    renderFilters();
+    renderMovies();
+  </script>
+</body>
+</html>
