@@ -1,4 +1,4 @@
-# Chitra admin setup
+# SMovies admin setup
 
 The public movie catalog and admin tools use Supabase. Movie edits are shared with all visitors. Poster uploads are limited to 5 MB per image; add trailers or videos by embedding a YouTube/Vimeo link or a direct MP4/WebM link that you have permission to use. This site embeds videos; it does not host full-length video files.
 
