@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="te">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101014">
-  <meta name="description" content="మీ నెక్స్ట్ ఫేవరెట్ సినిమాను కనుక్కోండి — కొత్త సినిమాలు, ట్రెండింగ్ కథలు, మీ వాచ్‌లిస్ట్ అన్నీ ఒకేచోట.">
-  <title>చిత్ర — మీ సినిమా ప్రపంచం</title>
+  <meta name="description" content="Discover your next favorite movie — explore new releases, trending stories, and your watchlist in one place.">
+  <title>Chitra — Your Movie World</title>
   <style>
     :root {
       color-scheme: dark;
@@ -16,7 +16,7 @@
       --accent: #ff5b50;
       --accent-light: #ff8278;
       --line: rgba(255,255,255,.09);
-      font-family: Inter, "Noto Sans Telugu", "Nirmala UI", "Segoe UI", sans-serif;
+      font-family: Inter, "Segoe UI", sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -128,84 +128,84 @@
 </head>
 <body>
   <header class="topbar shell">
-    <a class="brand" href="#" aria-label="చిత్ర హోమ్"><span class="brand-mark">చి</span>చిత్ర</a>
-    <nav class="nav" aria-label="ప్రధాన నావిగేషన్">
-      <a class="active" href="#home">హోమ్</a>
-      <a href="#movies">సినిమాలు</a>
-      <a href="#watchlist" id="watchlist-nav">నా వాచ్‌లిస్ట్</a>
+    <a class="brand" href="#" aria-label="Chitra home"><span class="brand-mark">C</span>Chitra</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a class="active" href="#home">Home</a>
+      <a href="#movies">Movies</a>
+      <a href="#watchlist" id="watchlist-nav">My Watchlist</a>
     </nav>
     <div class="top-actions">
-      <label class="search" aria-label="సినిమా వెతకండి">
+      <label class="search" aria-label="Search movies">
         <span aria-hidden="true">⌕</span>
-        <input id="search" type="search" placeholder="సినిమా వెతకండి..." autocomplete="off">
+        <input id="search" type="search" placeholder="Search movies..." autocomplete="off" aria-label="Search movies">
       </label>
-      <div class="profile" aria-label="ప్రొఫైల్">చి</div>
+      <div class="profile" aria-label="Profile">C</div>
     </div>
   </header>
 
   <main class="shell" id="home">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <div class="eyebrow">ఈ వారం స్పాట్‌లైట్</div>
-        <h1 id="hero-title">ఇంటర్‌స్టెల్లార్</h1>
-        <div class="hero-meta"><span>2014</span><span>సైన్స్ ఫిక్షన్</span><span>2గం 49ని</span><span class="rating">★ 8.7</span></div>
-        <p>మరిచిపోలేని కథలు, అద్భుతమైన సినిమాటోగ్రఫీ, మనసును తాకే సంగీతం — ఈ వారం మీరు మిస్ కాకూడని సినిమా.</p>
+        <div class="eyebrow">This Week's Spotlight</div>
+        <h1 id="hero-title">Interstellar</h1>
+        <div class="hero-meta"><span>2014</span><span>Sci-Fi</span><span>2h 49m</span><span class="rating">★ 8.7</span></div>
+        <p>A breathtaking journey through space to save humanity, exploring the enduring power of love, time, and hope.</p>
         <div class="hero-buttons">
-          <button class="btn btn-primary" id="hero-details">▶ &nbsp; వివరాలు చూడండి</button>
-          <button class="btn btn-quiet" id="hero-save">＋ &nbsp; వాచ్‌లిస్ట్</button>
+          <button class="btn btn-primary" id="hero-details">▶ &nbsp; View Details</button>
+          <button class="btn btn-quiet" id="hero-save">＋ &nbsp; Watchlist</button>
         </div>
       </div>
     </section>
 
     <section id="movies" aria-labelledby="movies-heading">
       <div class="section-heading">
-        <div><h2 id="movies-heading">మీ కోసం ఎంపిక చేసినవి</h2><p>ఈరోజు ప్రేక్షకులు ఎక్కువగా చూస్తున్న సినిమాలు</p></div>
-        <button class="text-link" id="clear-filters">అన్నీ చూడండి →</button>
+        <div><h2 id="movies-heading">Handpicked for You</h2><p>Movies audiences are loving right now</p></div>
+        <button class="text-link" id="clear-filters">View all →</button>
       </div>
-      <div class="filters" id="filters" aria-label="జానర్ ఫిల్టర్‌లు"></div>
+      <div class="filters" id="filters" aria-label="Filter by genre"></div>
       <div class="grid" id="movie-grid" aria-live="polite"></div>
     </section>
 
     <section class="collection" id="watchlist">
       <div class="section-heading">
-        <div><h2>మీ వాచ్‌లిస్ట్</h2><p>తర్వాత చూడటానికి దాచుకున్న సినిమాలు</p></div>
+        <div><h2>Your Watchlist</h2><p>Movies you've saved to watch later</p></div>
       </div>
       <div class="grid" id="watchlist-grid"></div>
     </section>
   </main>
-  <footer class="footer shell"><span>© 2025 చిత్రం · సినిమా ప్రేమికుల కోసం</span><span>కథలు కలుపుతాయి.</span></footer>
+  <footer class="footer shell"><span>© 2025 Chitra · Made for movie lovers</span><span>Stories bring us together.</span></footer>
 
   <dialog id="movie-dialog" aria-labelledby="dialog-title">
-    <button class="dialog-close" aria-label="మూసివేయండి">×</button>
+    <button class="dialog-close" aria-label="Close">×</button>
     <div class="dialog-cover"></div>
     <div class="dialog-content">
-      <div class="eyebrow">సినిమా వివరాలు</div>
+      <div class="eyebrow">Movie Details</div>
       <h2 id="dialog-title"></h2>
       <div class="hero-meta" id="dialog-meta"></div>
       <p id="dialog-description"></p>
-      <button class="btn btn-primary" id="dialog-save">＋ &nbsp; వాచ్‌లిస్ట్‌లో చేర్చండి</button>
+      <button class="btn btn-primary" id="dialog-save">＋ &nbsp; Add to Watchlist</button>
     </div>
   </dialog>
 
   <script>
     const movies = [
-      { id: 1, title: "ది గ్రాండ్ బుడాపెస్ట్", year: 2014, genre: "కామెడీ", rating: "8.1", language: "ఇంగ్లీష్", duration: "1గం 39ని", image: "photo-1478720568477-152d9b164e26", description: "ఒక ప్రసిద్ధ హోటల్ ద్వారపాలకుడు, అతని యువ సహాయకుడి చుట్టూ తిరిగే హాస్యం, స్నేహం, సాహసంతో నిండిన అందమైన కథ." },
-      { id: 2, title: "ఇన్‌టు ద వైల్డ్", year: 2007, genre: "డ్రామా", rating: "8.0", language: "ఇంగ్లీష్", duration: "2గం 28ని", image: "photo-1472396961693-142e6e269027", description: "తనను తాను కనుగొనే ప్రయాణంలో ప్రకృతి మధ్యకు వెళ్లిన ఒక యువకుడి హృదయాన్ని హత్తుకునే నిజ జీవిత కథ." },
-      { id: 3, title: "మిడ్‌నైట్ ఇన్ ప్యారిస్", year: 2011, genre: "రొమాన్స్", rating: "7.7", language: "ఇంగ్లీష్", duration: "1గం 34ని", image: "photo-1499856871958-5b9627545d1a", description: "ప్యారిస్‌లో ప్రతి రాత్రీ గతంలోని అద్భుతమైన ప్రపంచంలోకి తీసుకెళ్లే ఒక రచయిత మాయా ప్రయాణం." },
-      { id: 4, title: "ఇంటర్‌స్టెల్లార్", year: 2014, genre: "సైన్స్ ఫిక్షన్", rating: "8.7", language: "ఇంగ్లీష్", duration: "2గం 49ని", image: "photo-1446776811953-b23d57bd21aa", description: "మానవాళి భవిష్యత్తు కోసం ఒక తండ్రి అంతరిక్షంలో చేసే అపారమైన ప్రయాణం — ప్రేమ, కాలం, ఆశల గురించి గొప్ప కథ." },
-      { id: 5, title: "ది సీక్రెట్ లైఫ్ ఆఫ్ వాల్టర్", year: 2013, genre: "అడ్వెంచర్", rating: "7.3", language: "ఇంగ్లీష్", duration: "1గం 54ని", image: "photo-1464822759023-fed622ff2c3b", description: "ఊహల్లోనే సాహసాలు చేసే ఒక సాధారణ వ్యక్తి, తన జీవితంలోనే అతిపెద్ద ప్రయాణాన్ని మొదలుపెడతాడు." },
-      { id: 6, title: "లా లా ల్యాండ్", year: 2016, genre: "మ్యూజికల్", rating: "8.0", language: "ఇంగ్లీష్", duration: "2గం 8ని", image: "photo-1519608487953-e999c86e7455", description: "లాస్ ఏంజెలెస్‌లో కలలు కనే ఇద్దరు కళాకారుల ప్రేమ, ఆశయం, సంగీతంతో నిండిన రంగుల ప్రయాణం." },
-      { id: 7, title: "ది షావ్‌షాంక్ రిడెంప్షన్", year: 1994, genre: "డ్రామా", rating: "9.3", language: "ఇంగ్లీష్", duration: "2గం 22ని", image: "photo-1511497584788-876760111969", description: "స్నేహం, ఓర్పు, ఆశ కలిస్తే ఎలాంటి గోడనైనా దాటవచ్చని చెప్పే చిరస్మరణీయ కథ." },
-      { id: 8, title: "అమీలీ", year: 2001, genre: "రొమాన్స్", rating: "8.3", language: "ఫ్రెంచ్", duration: "2గం 2ని", image: "photo-1490730141103-6cac27aaab94", description: "ప్యారిస్‌లోని చిన్న చిన్న ఆనందాలను ఇతరుల జీవితాల్లో పంచే ఓ యువతి మధురమైన కథ." },
-      { id: 9, title: "ది మార్షియన్", year: 2015, genre: "సైన్స్ ఫిక్షన్", rating: "8.0", language: "ఇంగ్లీష్", duration: "2గం 24ని", image: "photo-1446776811953-b23d57bd21aa", description: "అంగారక గ్రహంపై ఒంటరిగా చిక్కుకున్న వ్యోమగామి, తెలివి మరియు పట్టుదలతో బతికి బయటపడే సాహసం." },
-      { id: 10, title: "లైఫ్ ఆఫ్ పై", year: 2012, genre: "అడ్వెంచర్", rating: "7.9", language: "ఇంగ్లీష్", duration: "2గం 7ని", image: "photo-1500375592092-40eb2168fd21", description: "సముద్రంలో ఒక పులితో కలిసి బతుకు పోరాటం చేసే యువకుడి దృశ్య కావ్యం." }
+      { id: 1, title: "The Grand Budapest Hotel", year: 2014, genre: "Comedy", rating: "8.1", language: "English", duration: "1h 39m", image: "photo-1478720568477-152d9b164e26", description: "A charming tale of friendship and adventure following a legendary hotel concierge and his young protégé." },
+      { id: 2, title: "Into the Wild", year: 2007, genre: "Drama", rating: "8.0", language: "English", duration: "2h 28m", image: "photo-1472396961693-142e6e269027", description: "A moving true story of a young man who ventures into the wilderness in search of himself." },
+      { id: 3, title: "Midnight in Paris", year: 2011, genre: "Romance", rating: "7.7", language: "English", duration: "1h 34m", image: "photo-1499856871958-5b9627545d1a", description: "A writer's magical Parisian adventure takes him each night into the enchanting world of the past." },
+      { id: 4, title: "Interstellar", year: 2014, genre: "Sci-Fi", rating: "8.7", language: "English", duration: "2h 49m", image: "photo-1446776811953-b23d57bd21aa", description: "A father's epic journey through space to save humanity — a story about love, time, and hope." },
+      { id: 5, title: "The Secret Life of Walter Mitty", year: 2013, genre: "Adventure", rating: "7.3", language: "English", duration: "1h 54m", image: "photo-1464822759023-fed622ff2c3b", description: "A daydreaming office worker embarks on the greatest real-life adventure of his life." },
+      { id: 6, title: "La La Land", year: 2016, genre: "Musical", rating: "8.0", language: "English", duration: "2h 8m", image: "photo-1519608487953-e999c86e7455", description: "Two ambitious artists fall in love while chasing their dreams in the colorful city of Los Angeles." },
+      { id: 7, title: "The Shawshank Redemption", year: 1994, genre: "Drama", rating: "9.3", language: "English", duration: "2h 22m", image: "photo-1511497584788-876760111969", description: "An unforgettable story of friendship, resilience, and the hope that carries us through." },
+      { id: 8, title: "Amélie", year: 2001, genre: "Romance", rating: "8.3", language: "French", duration: "2h 2m", image: "photo-1490730141103-6cac27aaab94", description: "A whimsical tale of a young woman bringing small joys into the lives of people around her in Paris." },
+      { id: 9, title: "The Martian", year: 2015, genre: "Sci-Fi", rating: "8.0", language: "English", duration: "2h 24m", image: "photo-1446776811953-b23d57bd21aa", description: "An astronaut stranded alone on Mars uses ingenuity and determination to survive against the odds." },
+      { id: 10, title: "Life of Pi", year: 2012, genre: "Adventure", rating: "7.9", language: "English", duration: "2h 7m", image: "photo-1500375592092-40eb2168fd21", description: "A visually stunning survival story about a young man and a tiger adrift in the ocean." }
     ];
-    const genres = ["అన్నీ", ...new Set(movies.map(movie => movie.genre))];
+    const genres = ["All", ...new Set(movies.map(movie => movie.genre))];
     const imageUrl = (image, width = 600) => `https://images.unsplash.com/${image}?auto=format&fit=crop&w=${width}&q=80`;
     const grid = document.querySelector("#movie-grid");
     const watchGrid = document.querySelector("#watchlist-grid");
     const dialog = document.querySelector("#movie-dialog");
-    let activeGenre = "అన్నీ";
+    let activeGenre = "All";
     let query = "";
     let watchlist = JSON.parse(localStorage.getItem("chitra-watchlist") || "[]");
     let dialogMovie = null;
@@ -218,11 +218,11 @@
 
     function card(movie) {
       const saved = watchlist.includes(movie.id);
-      return `<article class="card" data-id="${movie.id}" tabindex="0" aria-label="${movie.title}, వివరాలు చూడండి">
+      return       `<article class="card" data-id="${movie.id}" tabindex="0" aria-label="View details for ${movie.title}">
         <div class="poster-wrap">
-          <img class="poster" src="${imageUrl(movie.image)}" alt="${movie.title} సినిమా పోస్టర్" loading="lazy">
+          <img class="poster" src="${imageUrl(movie.image)}" alt="${movie.title} movie poster" loading="lazy">
           <span class="rating-badge">★ ${movie.rating}</span>
-          <button class="save-btn${saved ? " saved" : ""}" data-save="${movie.id}" aria-label="${saved ? "వాచ్‌లిస్ట్ నుంచి తొలగించండి" : "వాచ్‌లిస్ట్‌లో చేర్చండి"}" title="వాచ్‌లిస్ట్">${saved ? "♥" : "＋"}</button>
+          <button class="save-btn${saved ? " saved" : ""}" data-save="${movie.id}" aria-label="${saved ? "Remove from watchlist" : "Add to watchlist"}" title="Watchlist">${saved ? "♥" : "＋"}</button>
           <span class="poster-caption">${movie.language} &nbsp;·&nbsp; ${movie.duration}</span>
         </div>
         <h3 class="movie-title">${movie.title}</h3>
@@ -232,14 +232,14 @@
 
     function renderMovies() {
       const filtered = movies.filter(movie =>
-        (activeGenre === "అన్నీ" || movie.genre === activeGenre) &&
+        (activeGenre === "All" || movie.genre === activeGenre) &&
         `${movie.title} ${movie.genre} ${movie.year}`.toLowerCase().includes(query.toLowerCase())
       );
-      grid.innerHTML = filtered.length ? filtered.map(card).join("") : `<div class="empty">సినిమాలు కనిపించలేదు. వేరే పేరుతో వెతకండి.</div>`;
+      grid.innerHTML = filtered.length ? filtered.map(card).join("") : `<div class="empty">No movies found. Try a different search.</div>`;
       const savedMovies = movies.filter(movie => watchlist.includes(movie.id));
-      watchGrid.innerHTML = savedMovies.length ? savedMovies.map(card).join("") : `<div class="empty">ఇంకా సినిమాలు దాచుకోలేదు. మీకు నచ్చిన సినిమాపై ＋ నొక్కండి.</div>`;
+      watchGrid.innerHTML = savedMovies.length ? savedMovies.map(card).join("") : `<div class="empty">Your watchlist is empty. Press ＋ on a movie to save it for later.</div>`;
       const heroSaved = watchlist.includes(4);
-      document.querySelector("#hero-save").innerHTML = heroSaved ? "♥ &nbsp; వాచ్‌లిస్ట్‌లో ఉంది" : "＋ &nbsp; వాచ్‌లిస్ట్";
+      document.querySelector("#hero-save").innerHTML = heroSaved ? "♥ &nbsp; In Watchlist" : "＋ &nbsp; Watchlist";
       bindCards();
     }
 
@@ -262,7 +262,7 @@
 
     function updateDialogSave() {
       const saved = watchlist.includes(dialogMovie.id);
-      document.querySelector("#dialog-save").textContent = saved ? "♥  వాచ్‌లిస్ట్ నుంచి తొలగించండి" : "＋  వాచ్‌లిస్ట్‌లో చేర్చండి";
+      document.querySelector("#dialog-save").textContent = saved ? "♥  Remove from Watchlist" : "＋  Add to Watchlist";
     }
 
     function bindCards() {
@@ -297,7 +297,7 @@
       renderMovies();
     });
     document.querySelector("#clear-filters").addEventListener("click", () => {
-      activeGenre = "అన్నీ";
+      activeGenre = "All";
       query = "";
       document.querySelector("#search").value = "";
       renderFilters();
