@@ -1,0 +1,2 @@
+window.CHITRA_SUPABASE_URL = "";
+window.CHITRA_SUPABASE_ANON_KEY = "";

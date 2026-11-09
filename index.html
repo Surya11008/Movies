@@ -20,6 +20,7 @@
     }
 
     * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
     body { margin: 0; background: var(--bg); color: var(--text); min-width: 320px; }
     button, input { font: inherit; }
     button { color: inherit; }
@@ -93,6 +94,34 @@
     .dialog-content h2 { margin: 0 0 8px; }
     .dialog-content p { color: #c0bec9; font-size: 14px; line-height: 1.8; }
     .dialog-close { float: right; position: relative; z-index: 2; margin: 12px; background: #16161ac9; border: 0; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 19px; }
+    .dialog-player { margin: 20px 0; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; background: #08080a; }
+    .dialog-player[hidden] { display: none; }
+    .dialog-player iframe, .dialog-player video { width: 100%; height: 100%; border: 0; }
+    .admin-trigger { border: 0; padding: 8px; background: transparent; color: #b7b5c0; cursor: pointer; font-size: 13px; }
+    .admin-trigger:hover { color: white; }
+    #admin-dialog { width: min(850px, calc(100% - 28px)); max-height: 90vh; overflow-y: auto; padding: 26px; }
+    #admin-dialog h2 { margin: 0 0 7px; }
+    #admin-dialog p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .admin-message { display: none; margin: 15px 0; padding: 11px 13px; border: 1px solid rgba(255,130,120,.35); border-radius: 9px; color: #ffc2bd !important; background: rgba(255,91,80,.09); }
+    .admin-message.visible { display: block; }
+    .admin-message.success { border-color: rgba(98,207,146,.35); color: #a7e8c1 !important; background: rgba(98,207,146,.09); }
+    .admin-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 20px; }
+    .admin-form label { display: grid; gap: 7px; color: #d3d0d9; font-size: 12px; font-weight: 650; }
+    .admin-form .form-wide { grid-column: 1 / -1; }
+    .admin-form input, .admin-form textarea { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 11px; outline: 0; color: var(--text); background: #111116; font: inherit; font-size: 13px; }
+    .admin-form input:focus, .admin-form textarea:focus { border-color: var(--accent); }
+    .admin-form textarea { resize: vertical; min-height: 88px; }
+    .admin-form input[type="file"] { padding: 8px; }
+    .admin-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+    .admin-list { display: grid; gap: 9px; margin-top: 20px; }
+    .admin-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 9px; }
+    .admin-row-title { min-width: 0; overflow-wrap: anywhere; font-size: 13px; font-weight: 700; }
+    .admin-row-actions { display: flex; flex-shrink: 0; gap: 8px; }
+    .admin-row-actions button, .btn-secondary { cursor: pointer; border: 1px solid var(--line); border-radius: 7px; padding: 7px 10px; background: #26252d; font-size: 12px; }
+    .admin-row-actions .delete-movie { color: #ffaaa3; }
+    #site-status { display: none; margin: -25px 0 30px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 9px; color: var(--muted); font-size: 13px; }
+    #site-status.visible { display: block; }
+    #site-status.error { border-color: rgba(255,130,120,.35); color: #ffc2bd; }
 
     @media (max-width: 1000px) { .shell { padding: 0 4%; } .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } .topbar { gap: 28px; } }
     @media (max-width: 720px) {
@@ -124,6 +153,12 @@
       .section-heading h2 { font-size: 19px; }
       .footer { flex-direction: column; }
     }
+    @media (max-width: 560px) {
+      #admin-dialog { padding: 21px 16px; }
+      .admin-form { grid-template-columns: 1fr; }
+      .admin-form .form-wide { grid-column: auto; }
+      .admin-trigger { padding: 7px 2px; font-size: 12px; }
+    }
   </style>
 </head>
 <body>
@@ -133,8 +168,10 @@
       <a class="active" href="#home">Home</a>
       <a href="#movies">Movies</a>
       <a href="#watchlist" id="watchlist-nav">My Watchlist</a>
+      <a href="#admin" class="admin-nav" id="admin-nav">Admin</a>
     </nav>
     <div class="top-actions">
+      <button class="admin-trigger" id="admin-open" type="button">Admin</button>
       <label class="search" aria-label="Search movies">
         <span aria-hidden="true">⌕</span>
         <input id="search" type="search" placeholder="Search movies..." autocomplete="off" aria-label="Search movies">
@@ -144,6 +181,7 @@
   </header>
 
   <main class="shell" id="home">
+    <div id="site-status" role="status"></div>
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <div class="eyebrow">This Week's Spotlight</div>
@@ -183,12 +221,55 @@
       <h2 id="dialog-title"></h2>
       <div class="hero-meta" id="dialog-meta"></div>
       <p id="dialog-description"></p>
+      <div class="dialog-player" id="dialog-player" hidden>
+        <iframe title="Movie video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation" allowfullscreen hidden></iframe>
+        <video controls playsinline hidden></video>
+      </div>
       <button class="btn btn-primary" id="dialog-save">＋ &nbsp; Add to Watchlist</button>
     </div>
   </dialog>
 
+  <dialog id="admin-dialog" aria-labelledby="admin-title">
+    <button class="dialog-close" id="admin-close" aria-label="Close admin panel">×</button>
+    <h2 id="admin-title">Movie Admin</h2>
+    <p>Manage your movie catalog. Only your authorized admin account can make changes.</p>
+    <p class="admin-message" id="admin-message" role="alert"></p>
+    <form id="admin-login" class="admin-form">
+      <label>Email<input name="email" type="email" autocomplete="username" required></label>
+      <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+      <div class="admin-actions form-wide">
+        <button class="btn btn-primary" type="submit">Sign in</button>
+      </div>
+    </form>
+    <section id="admin-dashboard" hidden>
+      <div class="admin-actions">
+        <span id="admin-account"></span>
+        <button class="btn-secondary" id="admin-signout" type="button">Sign out</button>
+      </div>
+      <form id="admin-movie-form" class="admin-form">
+        <label>Movie title<input name="title" maxlength="120" required></label>
+        <label>Year<input name="year" type="number" min="1888" max="2100" required></label>
+        <label>Genre<input name="genre" maxlength="40" placeholder="Drama" required></label>
+        <label>Language<input name="language" maxlength="40" value="English" required></label>
+        <label>Duration<input name="duration" maxlength="30" placeholder="2h 10m"></label>
+        <label>Rating (0–10)<input name="rating" type="number" min="0" max="10" step="0.1" value="0"></label>
+        <label class="form-wide">Poster image URL<input name="poster_url" type="url" placeholder="https://example.com/poster.jpg"></label>
+        <label class="form-wide">Or upload a poster<input name="poster_file" type="file" accept="image/jpeg,image/png,image/webp,image/avif"></label>
+        <label class="form-wide">Authorized video embed URL<input name="video_url" type="url" placeholder="YouTube, Vimeo, or direct .mp4/.webm link"></label>
+        <label class="form-wide">Description<textarea name="description" maxlength="2000" required></textarea></label>
+        <div class="admin-actions form-wide">
+          <button class="btn btn-primary" type="submit" id="admin-save-movie">Add movie</button>
+          <button class="btn-secondary" type="button" id="admin-cancel-edit" hidden>Cancel edit</button>
+        </div>
+      </form>
+      <div id="admin-movie-list" class="admin-list"></div>
+    </section>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./supabase-config.js"></script>
   <script>
-    const movies = [
+    const demoMovies = [
       { id: 1, title: "The Grand Budapest Hotel", year: 2014, genre: "Comedy", rating: "8.1", language: "English", duration: "1h 39m", image: "photo-1478720568477-152d9b164e26", description: "A charming tale of friendship and adventure following a legendary hotel concierge and his young protégé." },
       { id: 2, title: "Into the Wild", year: 2007, genre: "Drama", rating: "8.0", language: "English", duration: "2h 28m", image: "photo-1472396961693-142e6e269027", description: "A moving true story of a young man who ventures into the wilderness in search of himself." },
       { id: 3, title: "Midnight in Paris", year: 2011, genre: "Romance", rating: "7.7", language: "English", duration: "1h 34m", image: "photo-1499856871958-5b9627545d1a", description: "A writer's magical Parisian adventure takes him each night into the enchanting world of the past." },
@@ -200,34 +281,104 @@
       { id: 9, title: "The Martian", year: 2015, genre: "Sci-Fi", rating: "8.0", language: "English", duration: "2h 24m", image: "photo-1446776811953-b23d57bd21aa", description: "An astronaut stranded alone on Mars uses ingenuity and determination to survive against the odds." },
       { id: 10, title: "Life of Pi", year: 2012, genre: "Adventure", rating: "7.9", language: "English", duration: "2h 7m", image: "photo-1500375592092-40eb2168fd21", description: "A visually stunning survival story about a young man and a tiger adrift in the ocean." }
     ];
-    const genres = ["All", ...new Set(movies.map(movie => movie.genre))];
     const imageUrl = (image, width = 600) => `https://images.unsplash.com/${image}?auto=format&fit=crop&w=${width}&q=80`;
     const grid = document.querySelector("#movie-grid");
     const watchGrid = document.querySelector("#watchlist-grid");
     const dialog = document.querySelector("#movie-dialog");
+    const adminDialog = document.querySelector("#admin-dialog");
+    const adminLogin = document.querySelector("#admin-login");
+    const adminDashboard = document.querySelector("#admin-dashboard");
+    const adminForm = document.querySelector("#admin-movie-form");
+    const adminMessage = document.querySelector("#admin-message");
+    const siteStatus = document.querySelector("#site-status");
+    const configured = Boolean(window.CHITRA_SUPABASE_URL && window.CHITRA_SUPABASE_ANON_KEY);
+    const supabaseClient = configured && window.supabase
+      ? window.supabase.createClient(window.CHITRA_SUPABASE_URL, window.CHITRA_SUPABASE_ANON_KEY)
+      : null;
+    let movies = demoMovies;
     let activeGenre = "All";
     let query = "";
-    let watchlist = JSON.parse(localStorage.getItem("chitra-watchlist") || "[]");
+    let watchlist = [];
     let dialogMovie = null;
+    let featuredMovie = null;
+    let editingMovieId = null;
+
+    try {
+      const savedMovies = JSON.parse(localStorage.getItem("chitra-watchlist") || "[]");
+      watchlist = Array.isArray(savedMovies) ? savedMovies.map(String) : [];
+    } catch (error) {
+      console.error("Could not read the saved watchlist.", error);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[character]);
+    }
+
+    function isSaved(id) {
+      return watchlist.includes(String(id));
+    }
+
+    function posterUrl(movie, width = 600) {
+      if (!movie.poster_url) return imageUrl(movie.image, width);
+      try {
+        const url = new URL(movie.poster_url);
+        return url.protocol === "https:" ? url.href : imageUrl(movie.image, width);
+      } catch {
+        return imageUrl(movie.image, width);
+      }
+    }
+
+    function setSiteStatus(message, isError = false) {
+      siteStatus.textContent = message;
+      siteStatus.classList.toggle("visible", Boolean(message));
+      siteStatus.classList.toggle("error", isError);
+    }
 
     function renderFilters() {
+      const genres = ["All", ...new Set(movies.map(movie => movie.genre).filter(Boolean))];
+      if (!genres.includes(activeGenre)) activeGenre = "All";
       document.querySelector("#filters").innerHTML = genres.map(genre =>
-        `<button class="filter${genre === activeGenre ? " selected" : ""}" data-genre="${genre}">${genre}</button>`
+        `<button class="filter${genre === activeGenre ? " selected" : ""}" data-genre="${escapeHtml(genre)}">${escapeHtml(genre)}</button>`
       ).join("");
     }
 
     function card(movie) {
-      const saved = watchlist.includes(movie.id);
-      return       `<article class="card" data-id="${movie.id}" tabindex="0" aria-label="View details for ${movie.title}">
+      const saved = isSaved(movie.id);
+      return `<article class="card" data-id="${escapeHtml(movie.id)}" tabindex="0" aria-label="View details for ${escapeHtml(movie.title)}">
         <div class="poster-wrap">
-          <img class="poster" src="${imageUrl(movie.image)}" alt="${movie.title} movie poster" loading="lazy">
-          <span class="rating-badge">★ ${movie.rating}</span>
-          <button class="save-btn${saved ? " saved" : ""}" data-save="${movie.id}" aria-label="${saved ? "Remove from watchlist" : "Add to watchlist"}" title="Watchlist">${saved ? "♥" : "＋"}</button>
-          <span class="poster-caption">${movie.language} &nbsp;·&nbsp; ${movie.duration}</span>
+          <img class="poster" src="${escapeHtml(posterUrl(movie))}" alt="${escapeHtml(movie.title)} movie poster" loading="lazy">
+          <span class="rating-badge">★ ${escapeHtml(movie.rating)}</span>
+          <button class="save-btn${saved ? " saved" : ""}" data-save="${escapeHtml(movie.id)}" aria-label="${saved ? "Remove from watchlist" : "Add to watchlist"}" title="Watchlist">${saved ? "♥" : "＋"}</button>
+          <span class="poster-caption">${escapeHtml(movie.language)} &nbsp;·&nbsp; ${escapeHtml(movie.duration)}</span>
         </div>
-        <h3 class="movie-title">${movie.title}</h3>
-        <div class="movie-sub"><span>${movie.genre}</span><span>${movie.year}</span></div>
+        <h3 class="movie-title">${escapeHtml(movie.title)}</h3>
+        <div class="movie-sub"><span>${escapeHtml(movie.genre)}</span><span>${escapeHtml(movie.year)}</span></div>
       </article>`;
+    }
+
+    function renderHero() {
+      featuredMovie = movies.find(movie => movie.title.toLowerCase() === "interstellar") || movies[0] || null;
+      const hero = document.querySelector(".hero");
+      const detailsButton = document.querySelector("#hero-details");
+      const saveButton = document.querySelector("#hero-save");
+      if (!featuredMovie) {
+        document.querySelector("#hero-title").textContent = "Discover your next favorite movie.";
+        document.querySelector(".hero-meta").innerHTML = "";
+        document.querySelector(".hero-copy > p").textContent = "Explore the movie collection and find a story you'll love.";
+        detailsButton.disabled = true;
+        saveButton.disabled = true;
+        return;
+      }
+      document.querySelector("#hero-title").textContent = featuredMovie.title;
+      document.querySelector(".hero-meta").innerHTML =
+        `<span>${escapeHtml(featuredMovie.year)}</span><span>${escapeHtml(featuredMovie.genre)}</span><span>${escapeHtml(featuredMovie.duration)}</span><span class="rating">★ ${escapeHtml(featuredMovie.rating)}</span>`;
+      document.querySelector(".hero-copy > p").textContent = featuredMovie.description;
+      hero.style.backgroundImage = `url("${posterUrl(featuredMovie, 1600).replace(/["\\\n\r]/g, "")}")`;
+      detailsButton.disabled = false;
+      saveButton.disabled = false;
+      saveButton.innerHTML = isSaved(featuredMovie.id) ? "♥ &nbsp; In Watchlist" : "＋ &nbsp; Watchlist";
     }
 
     function renderMovies() {
@@ -236,38 +387,86 @@
         `${movie.title} ${movie.genre} ${movie.year}`.toLowerCase().includes(query.toLowerCase())
       );
       grid.innerHTML = filtered.length ? filtered.map(card).join("") : `<div class="empty">No movies found. Try a different search.</div>`;
-      const savedMovies = movies.filter(movie => watchlist.includes(movie.id));
+      const savedMovies = movies.filter(movie => isSaved(movie.id));
       watchGrid.innerHTML = savedMovies.length ? savedMovies.map(card).join("") : `<div class="empty">Your watchlist is empty. Press ＋ on a movie to save it for later.</div>`;
-      const heroSaved = watchlist.includes(4);
-      document.querySelector("#hero-save").innerHTML = heroSaved ? "♥ &nbsp; In Watchlist" : "＋ &nbsp; Watchlist";
+      renderHero();
       bindCards();
     }
 
     function toggleSaved(id) {
-      watchlist = watchlist.includes(id) ? watchlist.filter(item => item !== id) : [...watchlist, id];
+      const normalizedId = String(id);
+      watchlist = isSaved(normalizedId)
+        ? watchlist.filter(item => item !== normalizedId)
+        : [...watchlist, normalizedId];
       localStorage.setItem("chitra-watchlist", JSON.stringify(watchlist));
       renderMovies();
       if (dialogMovie) updateDialogSave();
     }
 
+    function videoSource(value) {
+      if (!value) return null;
+      const url = new URL(value);
+      if (url.protocol !== "https:") throw new Error("Video links must use HTTPS.");
+      const host = url.hostname.toLowerCase();
+      if (host === "youtu.be" || host === "youtube.com" || host === "www.youtube.com" || host === "m.youtube.com" || host === "youtube-nocookie.com" || host === "www.youtube-nocookie.com") {
+        const parts = url.pathname.split("/").filter(Boolean);
+        const id = host === "youtu.be" ? parts[0] : (url.searchParams.get("v") || parts[1]);
+        if (!id || !/^[\w-]{11}$/.test(id)) throw new Error("Enter a valid YouTube video link.");
+        return { type: "iframe", url: `https://www.youtube-nocookie.com/embed/${id}` };
+      }
+      if (host === "vimeo.com" || host === "www.vimeo.com" || host === "player.vimeo.com") {
+        const id = url.pathname.split("/").filter(Boolean).pop();
+        if (!id || !/^\d+$/.test(id)) throw new Error("Enter a valid Vimeo video link.");
+        return { type: "iframe", url: `https://player.vimeo.com/video/${id}` };
+      }
+      if (/\.(mp4|webm)$/i.test(url.pathname)) return { type: "video", url: url.href };
+      throw new Error("Use a YouTube, Vimeo, or direct MP4/WebM video link.");
+    }
+
     function openMovie(movie) {
+      if (!movie) return;
       dialogMovie = movie;
-      document.querySelector(".dialog-cover").style.backgroundImage = `url("${imageUrl(movie.image, 1000)}")`;
+      document.querySelector(".dialog-cover").style.backgroundImage = `url("${posterUrl(movie, 1000).replace(/["\\\n\r]/g, "")}")`;
       document.querySelector("#dialog-title").textContent = movie.title;
       document.querySelector("#dialog-meta").textContent = `${movie.year}  ·  ${movie.genre}  ·  ★ ${movie.rating}  ·  ${movie.duration}`;
       document.querySelector("#dialog-description").textContent = movie.description;
+      const player = document.querySelector("#dialog-player");
+      const iframe = player.querySelector("iframe");
+      const video = player.querySelector("video");
+      iframe.hidden = true;
+      video.hidden = true;
+      iframe.removeAttribute("src");
+      video.removeAttribute("src");
+      player.hidden = true;
+      if (movie.video_url) {
+        try {
+          const source = videoSource(movie.video_url);
+          player.hidden = false;
+          if (source.type === "iframe") {
+            iframe.src = source.url;
+            iframe.hidden = false;
+          } else {
+            video.src = source.url;
+            video.hidden = false;
+          }
+        } catch (error) {
+          console.error("The saved video link is invalid.", error);
+        }
+      }
       updateDialogSave();
       dialog.showModal();
     }
 
     function updateDialogSave() {
-      const saved = watchlist.includes(dialogMovie.id);
-      document.querySelector("#dialog-save").textContent = saved ? "♥  Remove from Watchlist" : "＋  Add to Watchlist";
+      if (!dialogMovie) return;
+      document.querySelector("#dialog-save").textContent = isSaved(dialogMovie.id)
+        ? "♥  Remove from Watchlist"
+        : "＋  Add to Watchlist";
     }
 
     function bindCards() {
       document.querySelectorAll(".card").forEach(element => {
-        const movie = movies.find(item => item.id === Number(element.dataset.id));
+        const movie = movies.find(item => String(item.id) === element.dataset.id);
         element.addEventListener("click", event => {
           if (event.target.closest("[data-save]")) return;
           openMovie(movie);
@@ -281,8 +480,139 @@
       });
       document.querySelectorAll("[data-save]").forEach(button => button.addEventListener("click", event => {
         event.stopPropagation();
-        toggleSaved(Number(button.dataset.save));
+        toggleSaved(button.dataset.save);
       }));
+    }
+
+    async function loadMovies() {
+      if (!supabaseClient) {
+        setSiteStatus(configured
+          ? "Supabase could not be loaded. Check your connection and configuration."
+          : "Demo catalog — connect Supabase to manage and publish your own movies.");
+        if (configured) console.error("Supabase credentials are present, but the client library did not load.");
+        return;
+      }
+      const { data, error } = await supabaseClient.from("movies").select("*").order("created_at", { ascending: false });
+      if (error) {
+        console.error("Could not load the movie catalog.", error);
+        movies = [];
+        setSiteStatus(`Could not load movies: ${error.message}`, true);
+      } else {
+        movies = data || [];
+        setSiteStatus("");
+      }
+      renderFilters();
+      renderMovies();
+    }
+
+    function setAdminMessage(message, isError = true) {
+      adminMessage.textContent = message;
+      adminMessage.classList.toggle("visible", Boolean(message));
+      adminMessage.classList.toggle("success", Boolean(message) && !isError);
+    }
+
+    async function showAdminSession(session) {
+      adminLogin.hidden = true;
+      adminDashboard.hidden = true;
+      if (!session) {
+        adminLogin.hidden = false;
+        return;
+      }
+      const { data, error } = await supabaseClient
+        .from("movie_admins")
+        .select("user_id")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+      if (error) {
+        console.error("Could not verify movie-admin access.", error);
+        adminLogin.hidden = false;
+        setAdminMessage(`Could not verify admin access: ${error.message}`);
+        return;
+      }
+      if (!data) {
+        adminLogin.hidden = false;
+        setAdminMessage("This account is not authorized as a movie admin.");
+        return;
+      }
+      adminDashboard.hidden = false;
+      setAdminMessage("");
+      document.querySelector("#admin-account").textContent = session.user.email;
+      renderAdminList();
+    }
+
+    async function renderAdminList() {
+      document.querySelector("#admin-movie-list").innerHTML = movies.map(movie =>
+        `<div class="admin-row">
+          <span class="admin-row-title">${escapeHtml(movie.title)} (${escapeHtml(movie.year)})</span>
+          <span class="admin-row-actions">
+            <button type="button" data-edit-movie="${escapeHtml(movie.id)}">Edit</button>
+            <button type="button" class="delete-movie" data-delete-movie="${escapeHtml(movie.id)}">Delete</button>
+          </span>
+        </div>`
+      ).join("") || `<p>No movies yet. Add your first movie above.</p>`;
+    }
+
+    function resetMovieForm() {
+      editingMovieId = null;
+      adminForm.reset();
+      adminForm.elements.language.value = "English";
+      adminForm.elements.rating.value = "0";
+      document.querySelector("#admin-save-movie").textContent = "Add movie";
+      document.querySelector("#admin-cancel-edit").hidden = true;
+    }
+
+    function startEditingMovie(movie) {
+      editingMovieId = movie.id;
+      for (const field of ["title", "year", "genre", "language", "duration", "rating", "description"]) {
+        adminForm.elements[field].value = movie[field] ?? "";
+      }
+      adminForm.elements.poster_url.value = movie.poster_url || "";
+      adminForm.elements.video_url.value = movie.video_url || "";
+      adminForm.elements.poster_file.value = "";
+      document.querySelector("#admin-save-movie").textContent = "Save changes";
+      document.querySelector("#admin-cancel-edit").hidden = false;
+      adminForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    async function uploadPoster(file) {
+      const allowedTypes = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp",
+        "image/avif": "avif"
+      };
+      if (!allowedTypes[file.type]) throw new Error("Use a JPG, PNG, WebP, or AVIF poster image.");
+      if (file.size > 5 * 1024 * 1024) throw new Error("Poster images must be 5 MB or smaller.");
+      const path = `${crypto.randomUUID()}.${allowedTypes[file.type]}`;
+      const { error } = await supabaseClient.storage.from("movie-posters").upload(path, file, {
+        cacheControl: "3600",
+        contentType: file.type,
+        upsert: false
+      });
+      if (error) throw error;
+      const { data } = supabaseClient.storage.from("movie-posters").getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    async function openAdmin() {
+      adminDialog.showModal();
+      setAdminMessage("");
+      adminLogin.hidden = false;
+      adminDashboard.hidden = true;
+      if (!supabaseClient) {
+        adminLogin.hidden = true;
+        setAdminMessage(configured
+          ? "The Supabase client could not be loaded. Check your internet connection."
+          : "Admin setup is not complete. Follow SUPABASE_SETUP.md to connect Supabase and authorize your admin account.");
+        return;
+      }
+      const { data, error } = await supabaseClient.auth.getSession();
+      if (error) {
+        console.error("Could not read the admin session.", error);
+        setAdminMessage(`Could not read your session: ${error.message}`);
+        return;
+      }
+      await showAdminSession(data.session);
     }
 
     document.querySelector("#filters").addEventListener("click", event => {
@@ -307,16 +637,145 @@
       event.preventDefault();
       document.querySelector("#watchlist").scrollIntoView({ behavior: "smooth" });
     });
-    document.querySelector("#hero-details").addEventListener("click", () => openMovie(movies[3]));
-    document.querySelector("#hero-save").addEventListener("click", () => toggleSaved(4));
+    document.querySelector("#hero-details").addEventListener("click", () => openMovie(featuredMovie));
+    document.querySelector("#hero-save").addEventListener("click", () => {
+      if (featuredMovie) toggleSaved(featuredMovie.id);
+    });
     document.querySelector("#dialog-save").addEventListener("click", () => {
-      if (movies.some(movie => movie.id === dialogMovie.id)) toggleSaved(dialogMovie.id);
+      if (dialogMovie) toggleSaved(dialogMovie.id);
     });
     document.querySelector(".dialog-close").addEventListener("click", () => dialog.close());
     dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener("close", () => {
+      const iframe = dialog.querySelector("iframe");
+      const video = dialog.querySelector("video");
+      iframe.removeAttribute("src");
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    });
+
+    document.querySelector("#admin-open").addEventListener("click", openAdmin);
+    document.querySelector("#admin-nav").addEventListener("click", event => {
+      event.preventDefault();
+      openAdmin();
+    });
+    document.querySelector("#admin-close").addEventListener("click", () => adminDialog.close());
+    adminDialog.addEventListener("click", event => { if (event.target === adminDialog) adminDialog.close(); });
+
+    adminLogin.addEventListener("submit", async event => {
+      event.preventDefault();
+      setAdminMessage("");
+      const { email, password } = Object.fromEntries(new FormData(adminLogin));
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) {
+          console.error("Admin sign-in failed.", error);
+          setAdminMessage(`Sign-in failed: ${error.message}`);
+          return;
+        }
+        await showAdminSession(data.session);
+      } catch (error) {
+        console.error("Admin sign-in failed.", error);
+        setAdminMessage(`Sign-in failed: ${error.message || "An unexpected error occurred."}`);
+      }
+    });
+
+    document.querySelector("#admin-signout").addEventListener("click", async () => {
+      const { error } = await supabaseClient.auth.signOut();
+      if (error) {
+        console.error("Admin sign-out failed.", error);
+        setAdminMessage(`Sign-out failed: ${error.message}`);
+        return;
+      }
+      resetMovieForm();
+      adminDashboard.hidden = true;
+      adminLogin.hidden = false;
+      setAdminMessage("You have signed out.", false);
+    });
+
+    document.querySelector("#admin-cancel-edit").addEventListener("click", resetMovieForm);
+
+    adminForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      setAdminMessage("");
+      try {
+        const formData = new FormData(adminForm);
+        const existing = movies.find(movie => String(movie.id) === String(editingMovieId));
+        const posterInput = String(formData.get("poster_url") || "").trim();
+        const posterFile = formData.get("poster_file");
+        let poster_url = existing?.poster_url || "";
+        if (posterFile instanceof File && posterFile.size > 0) {
+          poster_url = await uploadPoster(posterFile);
+        } else if (posterInput) {
+          const poster = new URL(posterInput);
+          if (poster.protocol !== "https:") throw new Error("Poster links must use HTTPS.");
+          poster_url = poster.href;
+        }
+        if (!poster_url) throw new Error("Add a poster image URL or upload a poster.");
+        const videoInput = String(formData.get("video_url") || "").trim();
+        const video_url = videoInput ? videoSource(videoInput).url : "";
+        const movie = {
+          title: String(formData.get("title")).trim(),
+          year: Number(formData.get("year")),
+          genre: String(formData.get("genre")).trim(),
+          language: String(formData.get("language")).trim(),
+          duration: String(formData.get("duration")).trim(),
+          rating: Number(formData.get("rating")),
+          description: String(formData.get("description")).trim(),
+          poster_url,
+          video_url
+        };
+        const result = existing
+          ? await supabaseClient.from("movies").update(movie).eq("id", editingMovieId)
+          : await supabaseClient.from("movies").insert(movie);
+        if (result.error) {
+          console.error("Could not save the movie.", result.error);
+          setAdminMessage(`Could not save the movie: ${result.error.message}`);
+          return;
+        }
+        resetMovieForm();
+        await loadMovies();
+        renderAdminList();
+        setAdminMessage("Movie saved.", false);
+      } catch (error) {
+        console.error("Could not save the movie.", error);
+        setAdminMessage(`Could not save the movie: ${error.message || "An unexpected error occurred."}`);
+      }
+    });
+
+    document.querySelector("#admin-movie-list").addEventListener("click", async event => {
+      const editButton = event.target.closest("[data-edit-movie]");
+      if (editButton) {
+        const movie = movies.find(item => String(item.id) === editButton.dataset.editMovie);
+        if (movie) startEditingMovie(movie);
+        return;
+      }
+      const deleteButton = event.target.closest("[data-delete-movie]");
+      if (!deleteButton) return;
+      const movie = movies.find(item => String(item.id) === deleteButton.dataset.deleteMovie);
+      if (!movie || !confirm(`Delete "${movie.title}" from the catalog?`)) return;
+      const { error } = await supabaseClient.from("movies").delete().eq("id", movie.id);
+      if (error) {
+        console.error("Could not delete the movie.", error);
+        setAdminMessage(`Could not delete the movie: ${error.message}`);
+        return;
+      }
+      await loadMovies();
+      await renderAdminList();
+      setAdminMessage("Movie deleted.", false);
+    });
+
+    if (supabaseClient) {
+      supabaseClient.auth.onAuthStateChange((_event, session) => {
+        if (!adminDialog.open) return;
+        setTimeout(() => showAdminSession(session), 0);
+      });
+    }
 
     renderFilters();
     renderMovies();
+    loadMovies();
   </script>
 </body>
 </html>
