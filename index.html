@@ -222,7 +222,7 @@
       <div class="hero-meta" id="dialog-meta"></div>
       <p id="dialog-description"></p>
       <div class="dialog-player" id="dialog-player" hidden>
-        <iframe title="Movie video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation" allowfullscreen hidden></iframe>
+        <iframe title="Movie video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen hidden></iframe>
         <video controls playsinline hidden></video>
       </div>
       <button class="btn btn-primary" id="dialog-save">＋ &nbsp; Add to Watchlist</button>
@@ -232,7 +232,7 @@
   <dialog id="admin-dialog" aria-labelledby="admin-title">
     <button class="dialog-close" id="admin-close" aria-label="Close admin panel">×</button>
     <h2 id="admin-title">Movie Admin</h2>
-    <p>Manage your movie catalog. Only your authorized admin account can make changes.</p>
+    <p>Manage your movie catalog. Only your authorized admin account can make changes. <a href="https://github.com/Surya11008/Movies/blob/main/SUPABASE_SETUP.md" target="_blank" rel="noopener noreferrer">Open Supabase setup guide</a></p>
     <p class="admin-message" id="admin-message" role="alert"></p>
     <form id="admin-login" class="admin-form">
       <label>Email<input name="email" type="email" autocomplete="username" required></label>
@@ -299,6 +299,7 @@
     let activeGenre = "All";
     let query = "";
     let watchlist = [];
+    let catalogReady = false;
     let dialogMovie = null;
     let featuredMovie = null;
     let editingMovieId = null;
@@ -494,10 +495,11 @@
       }
       const { data, error } = await supabaseClient.from("movies").select("*").order("created_at", { ascending: false });
       if (error) {
+        catalogReady = false;
         console.error("Could not load the movie catalog.", error);
-        movies = [];
-        setSiteStatus(`Could not load movies: ${error.message}`, true);
+        setSiteStatus(`Could not load your Supabase catalog yet: ${error.message}. Your demo movies are still shown. Run supabase-schema.sql in your project's SQL Editor to finish setup.`, true);
       } else {
+        catalogReady = true;
         movies = data || [];
         setSiteStatus("");
       }
@@ -604,6 +606,11 @@
         setAdminMessage(configured
           ? "The Supabase client could not be loaded. Check your internet connection."
           : "Admin setup is not complete. Follow SUPABASE_SETUP.md to connect Supabase and authorize your admin account.");
+        return;
+      }
+      if (!catalogReady) {
+        adminLogin.hidden = true;
+        setAdminMessage("Finish connecting your Supabase database first: run supabase-schema.sql in the SQL Editor and authorize your admin email. Use the setup guide above for the exact steps.");
         return;
       }
       const { data, error } = await supabaseClient.auth.getSession();
